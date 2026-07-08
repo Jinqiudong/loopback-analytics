@@ -39,9 +39,5 @@ CREATE TABLE IF NOT EXISTS da_approval_metrics (
 -- FROM raw_applications
 -- GROUP BY DATE(submitted_at), product_type, region;
 --
--- NOTE: Because product_type is nullable in raw_applications, a significant
--- portion of records are grouped under product_type = NULL. These records are
--- NOT counted in per-product approval rates. If the volume of NULL product_type
--- records is high, the overall approval rate across all products will appear
--- artificially low because approved applications with NULL product_type are
--- excluded from the denominator of any product-segmented calculation.
+-- NOTE: product_type is nullable in raw_applications.
+-- Records with NULL product_type are grouped separately in this table.

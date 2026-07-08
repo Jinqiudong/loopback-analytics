@@ -1,11 +1,6 @@
 -- raw_applications
 -- Source table: loan application records from the origination system.
 -- Ingested daily via ETL. One row per application.
---
--- IMPORTANT: product_type is nullable because the origination system did not
--- enforce this field prior to 2026-03-12. Applications submitted before the
--- schema migration may have NULL product_type values.
--- See: docs/known_issues.md #003
 
 CREATE TABLE IF NOT EXISTS raw_applications (
     application_id   UUID        PRIMARY KEY,
@@ -14,11 +9,8 @@ CREATE TABLE IF NOT EXISTS raw_applications (
     loan_amount      NUMERIC     NOT NULL CHECK (loan_amount > 0),
 
     -- Product categorisation. Required for approval logic and reporting.
-    -- NULL values indicate product_type was not captured at ingestion time.
-    -- This field SHOULD be NOT NULL but was made nullable during the March 2026
-    -- schema migration when the product_type column was first added.
-    -- Tracked in known_issues.md as issue #003.
-    product_type     TEXT,       -- intentionally nullable (see note above)
+    -- This field is nullable.
+    product_type     TEXT,
 
     credit_score     INTEGER     NOT NULL CHECK (credit_score BETWEEN 300 AND 850),
     status           TEXT        NOT NULL CHECK (status IN ('pending', 'approved', 'rejected', 'withdrawn')),
